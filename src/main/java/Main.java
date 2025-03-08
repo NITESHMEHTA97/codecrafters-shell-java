@@ -1,8 +1,12 @@
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 import java.util.Set;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+        
         Set<String> commands = Set.of("echo", "exit", "type");
         String input,typeSubstring;
         while(true){
@@ -13,10 +17,15 @@ public class Main {
                  System.out.println(input.substring(5));
             }else if(input.startsWith("type")){
                 typeSubstring = input.substring(5);
-                if (commands.contains(typeSubstring)) {
+                if(commands.contains(typeSubstring)) {
                     System.out.printf("%s is a shell builtin%n", typeSubstring);
-                  } else {
-                    System.out.printf("%s: not found%n", typeSubstring);
+                  }else {
+                    String path = getPath(typeSubstring);
+                    if (path != null) {
+                    System.out.println(typeSubstring + " is " + path);
+                    } else {
+                    System.out.println(typeSubstring + ": not found");
+                    }
                   }
             }else if (input.equals("exit 0")){
                 break;            
@@ -24,5 +33,17 @@ public class Main {
                 System.out.println(input + ": command not found");
             }
         }        
+    }
+
+
+    private static String getPath(String parameter) {
+        String[] pathList = System.getenv("PATH").split(File.pathSeparator);
+        for (String path : pathList) {
+            Path fullPath = Path.of(path, parameter);
+            if (Files.isRegularFile(fullPath)) {
+                return fullPath.toString();
+            }
+        }
+        return null;
     }
 }
