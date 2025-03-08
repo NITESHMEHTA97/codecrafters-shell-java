@@ -3,7 +3,8 @@ public enum CommandsEnum {
     ECHO("echo"),
     EXIT("exit"),
     TYPE ("type"),
-    PWD("pwd");
+    PWD("pwd"),
+    CD("cd");
 
     public final String value;
 

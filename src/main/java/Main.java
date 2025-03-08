@@ -9,6 +9,7 @@ public class Main {
         
         Scanner scanner = new Scanner(System.in);
         String input,typeSubstring;
+        String cwd = System.getProperty("user.dir");
         while(true){
             System.out.print("$ ");
             input = scanner.nextLine();
@@ -33,10 +34,17 @@ public class Main {
                     }
                     break;
                 case CommandsEnum.PWD:
-                    System.out.println(System.getProperty("user.dir"));
+                    System.out.println(cwd);
                     break;
                 case CommandsEnum.EXIT:
                     System.exit(0);
+                    break;
+                case CommandsEnum.CD:
+                    if (Files.isDirectory(Path.of(inputParameters[1]))) {
+                        cwd = inputParameters[1];
+                    } else {
+                        System.out.printf("cd: %s: No such file or directory%n", inputParameters[1]);
+                    }
                     break;
                 default:
                     String path = getPath(command);
