@@ -7,37 +7,47 @@ import java.util.Set;
 public class Main {
     public static void main(String[] args) throws Exception {
         
-        Set<String> commands = Set.of("echo", "exit", "type","pwd");
+        Scanner scanner = new Scanner(System.in);
         String input,typeSubstring;
         while(true){
             System.out.print("$ ");
-            Scanner scanner = new Scanner(System.in);
             input = scanner.nextLine();
-            if(input.startsWith("echo")){
-                 System.out.println(input.substring(5));
-            }else if(input.startsWith("type")){
-                typeSubstring = input.substring(5);
-                if(commands.contains(typeSubstring)) {
-                    System.out.printf("%s is a shell builtin%n", typeSubstring);
-                  }else {
-                    String path = getPath(typeSubstring);
-                    if (path != null) {
-                    System.out.println(typeSubstring + " is " + path);
-                    } else {
-                    System.out.println(typeSubstring + ": not found");
+            String[] inputParameters = input.split(" ");
+            String command = inputParameters[0];
+            CommandsEnum enumm = CommandsEnum.fromString(command);
+            switch (enumm) {
+                case CommandsEnum.ECHO:
+                    System.out.println(input.substring(5));
+                    break;
+                case CommandsEnum.TYPE:
+                    typeSubstring = input.substring(5);
+                    if(CommandsEnum.contains(typeSubstring)) {
+                        System.out.printf("%s is a shell builtin%n", typeSubstring);
+                    }else {
+                        String path = getPath(typeSubstring);
+                        if (path != null) {
+                        System.out.println(typeSubstring + " is " + path);
+                        } else {
+                        System.out.println(typeSubstring + ": not found");
+                        }
                     }
-                  }
-            }else if(input.equals("pwd")){
-                System.out.println(System.getProperty("user.dir"));
-            }else if((getPath(input.split(" ")[0])!=null)){
-                Process process = Runtime.getRuntime().exec(input.split(" "));
-                process.getInputStream().transferTo(System.out);
-            }else if (input.equals("exit 0")){
-                break;            
-            }else{
-                System.out.println(input + ": command not found");
+                    break;
+                case CommandsEnum.PWD:
+                    System.out.println(System.getProperty("user.dir"));
+                    break;
+                case CommandsEnum.EXIT:
+                    System.exit(0);
+                    break;
+                default:
+                    String path = getPath(command);
+                    if(path!=null){
+                        Process process = Runtime.getRuntime().exec(inputParameters);
+                        process.getInputStream().transferTo(System.out);
+                    }else{
+                        System.out.println(input + ": command not found");
+                    }
             }
-        }        
+        }
     }
 
     private static String getPath(String parameter) {
