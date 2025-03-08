@@ -27,6 +27,9 @@ public class Main {
                     System.out.println(typeSubstring + ": not found");
                     }
                   }
+            }else if((getPath(input.split(" ")[0])!=null)){
+                Process process = Runtime.getRuntime().exec(input.split(" "));
+                process.getInputStream().transferTo(System.out);
             }else if (input.equals("exit 0")){
                 break;            
             }else{
