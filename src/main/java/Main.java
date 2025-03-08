@@ -7,7 +7,7 @@ import java.util.Set;
 public class Main {
     public static void main(String[] args) throws Exception {
         
-        Set<String> commands = Set.of("echo", "exit", "type");
+        Set<String> commands = Set.of("echo", "exit", "type","pwd");
         String input,typeSubstring;
         while(true){
             System.out.print("$ ");
@@ -27,6 +27,8 @@ public class Main {
                     System.out.println(typeSubstring + ": not found");
                     }
                   }
+            }else if(input.equals("pwd")){
+                System.out.println(System.getProperty("user.dir"));
             }else if((getPath(input.split(" ")[0])!=null)){
                 Process process = Runtime.getRuntime().exec(input.split(" "));
                 process.getInputStream().transferTo(System.out);
@@ -37,7 +39,6 @@ public class Main {
             }
         }        
     }
-
 
     private static String getPath(String parameter) {
         String[] pathList = System.getenv("PATH").split(File.pathSeparator);
