@@ -40,9 +40,11 @@ public class Main {
                     break;
                 case CommandsEnum.CD:
                     String dir = inputParameters[1];
-                    if (!dir.startsWith("/")) {
+                    if(dir.equals("~")){
+                        dir=System.getenv("HOME");
+                    } else if (!dir.startsWith("/")) {
                         dir = cwd + "/" + dir;
-                      }
+                    } 
                     if (Files.isDirectory(Path.of(dir))) {
                         cwd = Path.of(dir).normalize().toString();
                     } else {
