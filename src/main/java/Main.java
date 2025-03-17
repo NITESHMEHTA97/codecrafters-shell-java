@@ -2,7 +2,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -40,10 +39,14 @@ public class Main {
                     System.exit(0);
                     break;
                 case CommandsEnum.CD:
-                    if (Files.isDirectory(Path.of(inputParameters[1]))) {
-                        cwd = inputParameters[1];
+                    String dir = inputParameters[1];
+                    if (!dir.startsWith("/")) {
+                        dir = cwd + "/" + dir;
+                      }
+                    if (Files.isDirectory(Path.of(dir))) {
+                        cwd = Path.of(dir).normalize().toString();
                     } else {
-                        System.out.printf("cd: %s: No such file or directory%n", inputParameters[1]);
+                        System.out.printf("cd: %s: No such file or directory%n", dir);
                     }
                     break;
                 default:
